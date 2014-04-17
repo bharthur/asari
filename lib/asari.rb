@@ -32,7 +32,7 @@ class Asari
   # MissingSearchDomainException.
   #
   def search_domain
-    @search_domain || raise(MissingSearchDomainException.new)
+    @search_domain || "recroup-passive-profile-rldovcrabyrzmawx76hy4qcj64"
   end
 
   # Public: returns the current api_version, or the sensible default of
