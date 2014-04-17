@@ -32,7 +32,7 @@ class Asari
   # MissingSearchDomainException.
   #
   def search_domain
-    @search_domain || "talent-search-3saxonl6hzbm2utlfyrc2yvalq"
+    @search_domain || raise(MissingSearchDomainException.new)
   end
 
   # Public: returns the current api_version, or the sensible default of
@@ -47,10 +47,6 @@ class Asari
   # "us-east-1."
   def aws_region
     @aws_region || "us-west-2"
-  end
-  
-  def endpoint
-  	"http://doc-#{search_domain}.#{aws_region}.cloudsearch.amazonaws.com/#{api_version}/documents/batch"
   end
 
   # Public: Search for the specified term.
@@ -121,19 +117,15 @@ class Asari
   #   request to the server.
   #
   def add_item(id, fields)
-    query = build_query(id, fields)
-    doc_request(query)
-  end
-  
-  def build_query(id, fields)
-  	return nil if self.class.mode == :sandbox
+    return nil if self.class.mode == :sandbox
     query = { "type" => "add", "id" => id.to_s, "version" => Time.now.to_i, "lang" => "en" }
     fields.each do |k,v|
       fields[k] = convert_date_or_time(fields[k])
       fields[k] = "" if v.nil?
     end
+
     query["fields"] = fields
-    return query
+    doc_request(query)
   end
 
   # Public: Update an item in the index based on its document ID.
@@ -177,9 +169,10 @@ class Asari
 
   # Internal: helper method: common logic for queries against the doc endpoint.
   #
-  
   def doc_request(query)
-    options = { :body => [query].to_json, :headers => { "Content-Type" => "application/json", "Accept" => "application/json"} }
+    endpoint = "http://doc-#{search_domain}.#{aws_region}.cloudsearch.amazonaws.com/#{api_version}/documents/batch"
+
+    options = { :body => [query].to_json, :headers => { "Content-Type" => "application/json"} }
 
     begin
       response = HTTParty.post(endpoint, options)
