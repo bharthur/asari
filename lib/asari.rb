@@ -23,16 +23,17 @@ class Asari
   attr_writer :search_domain
   attr_writer :aws_region
 
-  def initialize(search_domain=nil, aws_region=nil)
-    @search_domain = search_domain
-    @aws_region = aws_region
+  def initialize(options = {})
+    @search_domain = options[:domain]
+    @aws_region = options[:region]
+    @api_version = options[:version]
   end
 
   # Public: returns the current search_domain, or raises a
   # MissingSearchDomainException.
   #
   def search_domain
-    @search_domain || raise(MissingSearchDomainException.new)
+    @search_domain || "talent-search-3saxonl6hzbm2utlfyrc2yvalq"
   end
 
   # Public: returns the current api_version, or the sensible default of
@@ -40,13 +41,13 @@ class Asari
   # CloudSearch API).
   #
   def api_version
-    @api_version || "2011-02-01"
+    @api_version || "2013-01-01"
   end
 
   # Public: returns the current aws_region, or the sensible default of
   # "us-east-1."
   def aws_region
-    @aws_region || "us-east-1"
+    @aws_region || "us-west-2"
   end
 
   # Public: Search for the specified term.
