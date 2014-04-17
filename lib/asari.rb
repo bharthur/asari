@@ -125,6 +125,8 @@ class Asari
     end
 
     query["fields"] = fields
+    puts 222222222222222222222222222222222
+    puts query.to_json
     doc_request(query)
   end
 
