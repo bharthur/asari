@@ -117,15 +117,19 @@ class Asari
   #   request to the server.
   #
   def add_item(id, fields)
-    return nil if self.class.mode == :sandbox
+    query = build_query(id, fields)
+    doc_request(query)
+  end
+  
+  def build_query(id, fields)
+  	return nil if self.class.mode == :sandbox
     query = { "type" => "add", "id" => id.to_s, "version" => Time.now.to_i, "lang" => "en" }
     fields.each do |k,v|
       fields[k] = convert_date_or_time(fields[k])
       fields[k] = "" if v.nil?
     end
-
     query["fields"] = fields
-    doc_request(query)
+    return query
   end
 
   # Public: Update an item in the index based on its document ID.
