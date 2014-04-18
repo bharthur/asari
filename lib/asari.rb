@@ -175,8 +175,8 @@ class Asari
   #
   def doc_request(query)
     endpoint = "http://doc-#{search_domain}.#{aws_region}.cloudsearch.amazonaws.com/#{api_version}/documents/batch"
-
-    options = { :body => [query].to_json, :headers => { "Content-Type" => "application/json"} }
+		json_data = query.class.to_s == "Array" ? query.to_json : [query].to_json
+    options = { :body => json_data, :headers => { "Content-Type" => "application/json"} }
 
     begin
       response = HTTParty.post(endpoint, options)
