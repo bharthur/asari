@@ -117,7 +117,11 @@ class Asari
   #   request to the server.
   #
   def add_item(id, fields)
-    query = build_item(id, fields)
+  	query = build_item(id, fields)
+  	logger.info "asari_add_item"
+    logger.info "#{fields.inspect}"
+    logger.info "#{id.inspect}"
+    logger.info "#{query.inspect}"
     doc_request(query)
   end
   

@@ -22,6 +22,8 @@ class Asari
     end
 
     def asari_add_to_index
+    	logger.info "asari_add_to_index"
+    	logger.info "#{self.inspect}"
       self.class.asari_add_item(self)
     end
 
@@ -83,6 +85,8 @@ class Asari
       # Internal: method for adding a newly created item to the CloudSearch
       # index. Should probably only be called from asari_add_to_index above.
       def asari_add_item(obj)
+      	logger.info "asari_add_item"
+    		logger.info "#{obj.inspect}"
         if self.asari_when
           return unless asari_should_index?(obj)
         end
