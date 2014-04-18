@@ -22,8 +22,6 @@ class Asari
     end
 
     def asari_add_to_index
-    	logger.info "asari_add_to_index"
-    	logger.info "#{self.inspect}"
       self.class.asari_add_item(self)
     end
 
@@ -65,6 +63,7 @@ class Asari
       #
       def asari_index(search_domain, fields, options = {})
         aws_region = options.delete(:aws_region)
+        Asari.mode = options.delete(:mode) || :sandbox
         self.class_variable_set(:@@asari_instance, Asari.new(search_domain,aws_region))
         self.class_variable_set(:@@asari_fields, fields)
         self.class_variable_set(:@@asari_when, options.delete(:when))
@@ -85,8 +84,6 @@ class Asari
       # Internal: method for adding a newly created item to the CloudSearch
       # index. Should probably only be called from asari_add_to_index above.
       def asari_add_item(obj)
-      	logger.info "asari_add_item"
-    		logger.info "#{obj.inspect}"
         if self.asari_when
           return unless asari_should_index?(obj)
         end
