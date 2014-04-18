@@ -126,7 +126,7 @@ class Asari
     query = { "type" => "add", "id" => id.to_s, "version" => Time.now.to_i, "lang" => "en" }
     fields.each do |k,v|
       fields[k] = convert_date_or_time(fields[k])
-      fields[k] = "" if v.nil?
+      fields.delete(k) if v.blank?
     end
     query["fields"] = fields
     return query
