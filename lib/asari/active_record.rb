@@ -162,6 +162,29 @@ class Asari
       def asari_on_error(exception)
         raise exception
       end
+      
+      def asari_reindex(search_domain, fields, options = {})
+      	Asari.mode = options.delete(:mode) || :sandbox
+      	aws_region = options.delete(:aws_region)
+      	size = options.delete(:batch_size) || 1000
+      	self.class_variable_set(:@@asari_fields, fields)
+      	self.class_variable_set(:@@asari_instance, Asari.new(search_domain, aws_region))
+     		batch_process(size)
+      end
+      
+      private
+      
+      def batch_process(size)
+      	self.find_in_batches(batch_size: size) do |batch|
+      		query = []
+      		batch.each do |obj|
+      			data = asari_data_item(obj)
+      			query << self.asari_instance.build_item(obj.send(:id), data)
+      		end
+      		self.asari_instance.doc_request(query)
+      	end
+      end
+      
     end
   end
 end
