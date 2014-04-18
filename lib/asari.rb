@@ -174,8 +174,6 @@ class Asari
   # Internal: helper method: common logic for queries against the doc endpoint.
   #
   def doc_request(query)
-  	puts 22222222222222222222222222
-  	puts query.to_json.inspect
     endpoint = "http://doc-#{search_domain}.#{aws_region}.cloudsearch.amazonaws.com/#{api_version}/documents/batch"
 
     options = { :body => [query].to_json, :headers => { "Content-Type" => "application/json"} }
@@ -228,7 +226,7 @@ class Asari
 
   def convert_date_or_time(obj)
     return obj unless [Time, Date, DateTime].include?(obj.class)
-    obj.to_time.utc.to_i
+    obj.to_time.utc.to_s
   end
 end
 
