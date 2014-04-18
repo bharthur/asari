@@ -164,29 +164,35 @@ class Asari
         raise exception
       end
       
-      def asari_reindex(search_domain, fields, options = {})
+      def asari_reindex(search_domain, fields, ids=nil, options = {})
       	Asari.mode = options.delete(:mode) || :sandbox
       	aws_region = options.delete(:aws_region)
       	size = options.delete(:batch_size) || 1000
       	self.class_variable_set(:@@asari_fields, fields)
       	self.class_variable_set(:@@asari_instance, Asari.new(search_domain, aws_region))
-     		batch_process(size)
+     		ids.present? ? asari_mass_index(ids) : asari_batch_reindex(size)
       end
       
       private
       
-      def batch_process(size)
-      	i = 1; self.find_in_batches(batch_size: size) do |batch|
-      		query = []
-      		batch.each do |obj|
-      			data = asari_data_item(obj)
-      			query << self.asari_instance.build_item(obj.send(:id), data)
-      		end
-      		logger.info "####################Processing batch number #{i}#################"
-      		self.asari_instance.doc_request(query); i = i + 1
+      def asari_batch_reindex(size)
+      	self.find_in_batches(batch_size: size) do |batch|
+      		asari_process_query(batch)
       	end
       end
       
+      def asari_mass_index(ids)
+      	asari_process_query(self.where(id: ids))
+      end
+      
+      def asari_process_query(batch)
+      	query = []
+      	batch.each do |obj|
+      		data = asari_data_item(obj)
+      		query << self.asari_instance.build_item(obj.send(:id), data)
+      	end; self.asari_instance.doc_request(query)
+      end
+
     end
   end
 end
