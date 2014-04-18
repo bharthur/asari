@@ -177,8 +177,10 @@ class Asari
     endpoint = "http://doc-#{search_domain}.#{aws_region}.cloudsearch.amazonaws.com/#{api_version}/documents/batch"
 		json_data = query.class.to_s == "Array" ? query.to_json : [query].to_json
     options = { :body => json_data, :headers => { "Content-Type" => "application/json"} }
-
     begin
+    	logger.info "****************************************************************"
+    	logger.info "#{query}"; logger.info "#{endpoint}"; logger.info "#{options}"
+    	logger.info "****************************************************************"
       response = HTTParty.post(endpoint, options)
     rescue Exception => e
       ae = Asari::DocumentUpdateException.new("#{e.class}: #{e.message}")

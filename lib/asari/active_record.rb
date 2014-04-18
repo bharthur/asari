@@ -175,13 +175,14 @@ class Asari
       private
       
       def batch_process(size)
-      	self.find_in_batches(batch_size: size) do |batch|
+      	i = 1; self.find_in_batches(batch_size: size) do |batch|
       		query = []
       		batch.each do |obj|
       			data = asari_data_item(obj)
       			query << self.asari_instance.build_item(obj.send(:id), data)
       		end
-      		self.asari_instance.doc_request(query)
+      		logger.info "####################Processing batch number #{i}#################"
+      		self.asari_instance.doc_request(query); i = i + 1
       	end
       end
       
