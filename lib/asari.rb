@@ -226,7 +226,7 @@ class Asari
 
   def convert_date_or_time(obj)
     return obj unless [Time, Date, DateTime].include?(obj.class)
-    obj.to_time.utc.to_s
+    obj.to_time.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
   end
 end
 
