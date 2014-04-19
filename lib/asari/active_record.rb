@@ -164,10 +164,11 @@ class Asari
         raise exception
       end
       
-      def asari_reindex(search_domain, fields, ids=nil, options = {})
+      def asari_reindex(search_domain, fields, options = {})
       	Asari.mode = options.delete(:mode) || :sandbox
       	aws_region = options.delete(:aws_region)
       	size = options.delete(:batch_size) || 1000
+      	ids = options.delete(:ids)
       	self.class_variable_set(:@@asari_fields, fields)
       	self.class_variable_set(:@@asari_instance, Asari.new(search_domain, aws_region))
      		ids.present? ? asari_mass_index(ids) : asari_batch_reindex(size)
