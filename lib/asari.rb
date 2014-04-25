@@ -181,6 +181,7 @@ class Asari
     	logger.info "****************************************************************"
     	logger.info "#{query}"; logger.info "#{endpoint}"; logger.info "#{options}"
     	logger.info "****************************************************************"
+    	puts "keeping padrino console alive.........................................."
       response = HTTParty.post(endpoint, options)
     rescue Exception => e
       ae = Asari::DocumentUpdateException.new("#{e.class}: #{e.message}")
